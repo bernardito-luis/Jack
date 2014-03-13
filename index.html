@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+    <head>
+        <title> Jackal.balanced </title>
+        <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+        <script type="text/javascript" src="/_ah/channel/jsapi"></script>
+    </head>
+    <style>
+        .Cell{ display:block; float:left; }
+    </style>
+    <body>
+        {% for greeting in greetings %}
+            <div><img src={{ "img?img_id=%s" % greeting.avatar }}></img></div>
+            {% if greeting.author %}
+                <b>{{ greeting.author.nickname() }}</b> wrote:
+            {% else %}
+                An anonymous person wrote:
+            {% endif %}
+            <blockquote>{{ greeting.content }}</blockquote>
+        {% endfor %}
+        
+        <form action="/sign?guestbook_name={{ guestbook_name }}" method="post">
+            <div><input type="submit" value="Hide all"></div>
+        </form>
+        
+        <hr>
+        
+
+        <br>
+
+
+        {% for i in range(11) %}
+            <p>
+            {% for j in range(11) %}
+                <a href="#" class="Cell">
+                    <img src="small_pics/tin.png" height="32" id={{ i*11 + j }} onclick="getSrc(this)">
+                </a>
+            {% endfor %}
+            <br>
+        {% endfor %}
+        <br>
+
+        Схема использования технологий <br>
+        <img src="large_pics/scheme.png" alt="Ну примерно" height="200"> <br>
+
+        <script>
+            var results = "{{ json_data }}";
+            function getSrc(img){
+                var start = 6 + (18 + 12)*img.id
+                img.src = results.slice(start, start+18);
+            };
+        
+           
+        </script>
+        
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-48940425-1', 'jackal-balanced.appspot.com');
+          ga('send', 'pageview');
+
+        </script>
+
+    </body>
+</html>
+{% endautoescape %}
