@@ -1,0 +1,4 @@
+cron:
+- description: generate a new balanced-map
+  url: /cron_tasks/map_generator/
+  schedule: every 1 hours
