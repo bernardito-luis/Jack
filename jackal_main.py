@@ -1,3 +1,6 @@
+﻿# -*- coding: utf-8 -*-
+import fix_path
+
 import os
 import urllib
 import cgi
@@ -8,6 +11,10 @@ from google.appengine.ext import ndb
 
 import jinja2
 import webapp2
+
+# cron
+from cron_tasks.map_generator import map_generator
+
 
 DEFAULT_GUESTBOOK_NAME = 'not_default_guestbook'
 
@@ -56,7 +63,7 @@ class MainPage(webapp2.RequestHandler):
             )
         }
         #self.response.write(template_values['json_data'])
-        self.response.write("Welcome to Jackal balanced")
+        self.response.write("Welcome to Jackal balanced\n")
 
         template = JINJA_ENVIRONMENT.get_template('index.html')
         self.response.write(template.render(template_values))
@@ -88,5 +95,6 @@ class Guestbook(webapp2.RequestHandler):
 
 application = webapp2.WSGIApplication([
         ('/', MainPage),
-        ('/sign', Guestbook)
+        ('/sign', Guestbook),
+#        ('/cron_tasks/map_generator', MapGenerator),
 ], debug=True)
