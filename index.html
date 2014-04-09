@@ -7,47 +7,210 @@
         <script type="text/javascript" src="/_ah/channel/jsapi"></script>
     </head>
     <style>
-        .Cell{ display:block; float:left; }
-    </style>
-    <body>
-        <div name="description"><p>На этой страничке представлено поле для настольной игры "Шакал". <br> Вся прелесть этой настольной игры заключается в том, что поле в каждой новой партии отличается от всех предыдущих. Игроки сами его создают - просто переворачивают 117 одинаковых клеточек, перемешивают их и раскладывают рубашкой вверх. Бывает так, что кому-то изначельно достается больше золота (ближе лежит к кораблю игрока), такие случаи не редкость. Цель этого web-приложения генерировать случайным образом поле так, чтобы всем доставалось примерно одинаково.</p></div>
-        {% for greeting in greetings %}
-            <div><img src={{ "img?img_id=%s" % greeting.avatar }}></img></div>
-            {% if greeting.author %}
-                <b>{{ greeting.author.nickname() }}</b> wrote:
-            {% else %}
-                An anonymous person wrote:
-            {% endif %}
-            <blockquote>{{ greeting.content }}</blockquote>
-        {% endfor %}
+        .game-field {
+            margin: 0 auto;
+            width: 748px;
         
-        <form action="/sign?guestbook_name={{ guestbook_name }}" method="post">
-            <div><input type="submit" value="Hide all"></div>
-        </form>
+        }        
+
+        .Cell{
+            height: 68px;
+            width: 68px;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            float:left;
+        }
+        .ImageCentred {
+            padding: 2px;
+        }        
+        .ImageCentred:hover {
+            outline-offset: -2px;
+            border-radius: 5px;
+            outline-color: lightblue;
+            box-shadow: 0px 0px 0px 2px darkgreen;
+        }        
+
+        .img.small {
+            height: 64px;
+            width: 64px;
+        }
+        {% set angle = ['0deg','90deg','180deg','270deg']|random %}
+        .rotated {
+            -webkit-transform   : rotate({{ angle }});
+            -moz-transform      : rotate({{ angle }});
+            transform           : rotate({{ angle }});
+        }
+        .rotor0 {
+            -webkit-transform: rotate(0deg);
+            -moz-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+
+        .rotor90 {
+            -webkit-transform: rotate(90deg);
+            -moz-transform: rotate(90deg);
+            transform: rotate(90deg);
+        }
+
+        .rotor180 {
+            -webkit-transform: rotate(180deg);
+            -moz-transform: rotate(180deg);
+            transform: rotate(180deg);
+        }
+
+        .rotor270 {
+            -webkit-transform: rotate(270deg);
+            -moz-transform: rotate(270deg);
+            transform: rotate(270deg);
+        }
+        
+        .bar {
+            padding: 18px;
+        }
+        
+        .foo {
+            border: 3px;
+            width: 100;
+            height: 100;
+
+        }
+
+    </style>
+    <body onLoad="preloadCells()">
+        <div name="description"><p>На этой страничке представлено поле для настольной игры "Шакал". <br> Вся прелесть этой настольной игры заключается в том, что поле в каждой новой партии отличается от всех предыдущих. Игроки сами его создают - просто переворачивают 117 одинаковых клеточек, перемешивают их и раскладывают рубашкой вверх. Бывает так, что кому-то изначельно достается больше золота (ближе лежит к кораблю игрока), такие случаи не редкость. Цель этого web-приложения генерировать случайным образом поле так, чтобы всем доставалось примерно одинаково.</p></div>
+
         
         <hr>
         
 
+        <div class="Cell foo">
+            <img class="bar" src="small_pics/tin.png">
+        </div>
+
         <br>
 
 
+        <div class="game-field">
         {% for i in range(11) %}
-            <p>
+
             {% for j in range(11) %}
-                <a href="#" class="Cell">
-                    <img src="small_pics/tin.png" height="32" id={{ i*11 + j }} onclick="getSrc(this)">
-                </a>
+                <div class="Cell">
+                {% if i*11+j == 0 %}
+                    <img class="ImageCentred" src="small_pics/wlu.png" id={{ i*11 + j }} onclick="getSrc(this)">
+                {% elif i*11+j == 10 %}
+                    <img class="ImageCentred" src="small_pics/wru.png" id={{ i*11 + j }} onclick="getSrc(this)">
+                {% elif i*11+j == 110 %}
+                    <img class="ImageCentred" src="small_pics/wld.png" id={{ i*11 + j }} onclick="getSrc(this)">
+                {% elif i*11+j == 120 %}
+                    <img class="ImageCentred" src="small_pics/wrd.png" id={{ i*11 + j }} onclick="getSrc(this)">
+                {% else %}
+                    <img class="ImageCentred" src="small_pics/tin.png" id={{ i*11 + j }} onclick="getSrc(this)">
+                {% endif %}
+                </div>
             {% endfor %}
             <br>
+            </p>
         {% endfor %}
-        <br>
 
+        <br>
+        </div>
+
+        
         <script>
             var results = "{{ json_data }}";
+            function preloadCells() {
+                var id=0;
+                var id_right=0;
+                var id_rleft=0;
+                var corners = [0, 8, 88, 96];
+                // preload the first 4 rectangles 3x5
+                for (var i=0; i<3; i++) {
+                    for (var j=3; j<8; j++) {
+                        // top (and calculate id for bot)
+                        Img_t = new Image();
+                        id_t = i*11 + j;
+                        id_b = 120 - id_t;
+                        id_t = 6 + (18 + 12)*id_t;
+                        Img_t.src = results.slice(id_t, id_t+18);
+                        
+                        // right (and calculate id for left)
+                        Img_r = new Image();
+                        id_r = j*11 + i;
+                        id_l = 120 - id_r;
+                        id_r = 6 + (18 + 12)*id_r;
+                        Img_r.src = results.slice(id_r, id_r+18);
+                        
+                        // bottom
+                        Img_b = new Image();
+                        id_b = 6 + (18 + 12)*id_b;
+                        Img_b.src = results.slice(id_b, id_b+18);
+                        
+                        // left
+                        Img_l = new Image();
+                        id_l = 6 + (18 + 12)*id_t;
+                        Img_l.src = results.slice(id_l, id_l+18);
+                        
+                        
+                    }
+                }
+                // preload corners
+                for (var i=0; i<3; i++) {
+                    for (var j=0; j<3; j++) {
+                        for (var k=0; k<4; k++) {
+                            Img_crn = new Image();
+                            id_crn = i*11 + j + corners[k];
+                            id_crn = 6 + (18 + 12)*id_crn;
+                            Img_crn.src = results.slice(id_crn, id_crn+18);
+                        }
+                    }
+                }
+                // preload the middle
+                for (var i=3; i<8; i++) {
+                    for (var j=3; j<8; j++) {
+                        Img_mid = new Image();
+                        id_mid = i*11 + j;
+                        id_mid = 6 + (18 + 12)*id_mid;
+                        Img_mid.src = results.slice(id_mid, id_mid+18);
+                    }
+                }
+                  
+                alert('Success!!');
+            }
             function getSrc(img){
-                var start = 6 + (18 + 12)*img.id
-                img.src = results.slice(start, start+18);
+
+                if (img.src.slice(-18) == "small_pics/tin.png") {
+                    var start = 6 + (18 + 12)*img.id;
+                    //alert(start);
+                    img.src = results.slice(start, start+18);
+                    // need to rotate only if it is one of the following:
+                    //   cnn, mdb, mds, msb, mss, mtd
+                    if ((img.src.slice(-7,-4) == "cnn") || 
+                        (img.src.slice(-7,-4) == "mdb") ||
+                        (img.src.slice(-7,-4) == "mds") ||
+                        (img.src.slice(-7,-4) == "msb") ||
+                        (img.src.slice(-7,-4) == "mss") ||
+                        (img.src.slice(-7,-4) == "mtd")) {
+                    
+                        // return random number between 0 and 3
+                        angle = Math.floor((Math.random()*4));
+                        // get the random angle 0, 90, 180 or 270
+                        angle = angle * 90;
+                        //img.height = 64;                
+                        //img.width = 64;                
+                        img.className = "ImageCentred " + "rotor"+angle;
+                    }
+                }
             };
+            function foobar(img) {
+                // return random number between 0 and 3
+                angle = Math.floor((Math.random()*4));
+                // get the random angle 0, 90, 180 or 270
+                angle = angle * 90;
+                img.height = 64;
+                
+                img.className = "rotor"+angle;
+            }
         
         </script>
 
