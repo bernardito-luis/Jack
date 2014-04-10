@@ -1,17 +1,27 @@
 application: jackal-balanced
-version: 5
+version: 6
 runtime: python27
 api_version: 1
-threadsafe: true
+threadsafe: yes
 
 handlers:
-- url: /cron_tasks/map_generator/
-  script: map_generator.py
+- url: /hello/world
+  script: hello.application3
+
+- url: /cron_tasks/map_generator
+  script: map_generator.application2
+  login: admin
 
 - url: /stylesheets
   static_dir: stylesheets
 
-- url: /.*
+- url: /main
+  script: jackal_main.application
+
+- url: /test
+  script: jackal_main.application
+
+- url: /small_pics
   static_dir: small_pics
 
 - url: /.*

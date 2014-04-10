@@ -12,8 +12,9 @@ from google.appengine.ext import ndb
 import jinja2
 import webapp2
 
-# cron
-from cron_tasks.map_generator import map_generator
+from map_generator import TreasureMap
+from assemble_map import assemble
+from info import textinfo
 
 
 DEFAULT_GUESTBOOK_NAME = 'not_default_guestbook'
@@ -29,12 +30,68 @@ class Greeting(ndb.Model):
     content = ndb.StringProperty(indexed=False)
     date = ndb.DateTimeProperty(auto_now_add=True)
 
+    
+# =====================================================================================================================
+# get a map from db (get a string abbreviation)
+def get_map_str_abb():
+    map_query = TreasureMap.query(TreasureMap.map_id == 0)
+    map_got = map_query.fetch(1)
+    # get current map number and quantuty
+    cur_map_num = int(map_got[0].info) / 0x10000
+    cur_map_quant = int(map_got[0].info) % 0x10000
+    
+    if cur_map_num == cur_map_quant:
+        # move to the begining
+        new_pointer = 0x10000+ cur_map_quant
+    else:
+        # increase pointer
+        new_pointer = int(map_got[0].info) + 0x10000
+    # move pointer
+    map_got[0].info = str(new_pointer)
+    map_got[0].put()
+
+    # get that map
+    map_query = TreasureMap.query(TreasureMap.map_id == cur_map_num)
+    map_got = map_query.fetch(1)
+    map_str = map_got[0].info
+    
+    return map_str
+# =====================================================================================================================
 
 def guestbook_key(guestbook_name=DEFAULT_GUESTBOOK_NAME):
     return ndb.Key('Guestbook', guestbook_name)
 
 
+BUBLE = '0'
 class MainPage(webapp2.RequestHandler):
+    # pretends to be a debug method (clone of the global function)
+    def c_get_map_str_abb(self):
+        map_query = TreasureMap.query(TreasureMap.map_id == 0)
+        map_got = map_query.fetch(1)
+        # get current map number and quantuty
+        cur_map_num = int(map_got[0].info) / 0x10000
+        self.response.write("You are using map #" + str(cur_map_num) + "<br>")
+        cur_map_quant = int(map_got[0].info) % 0x10000
+        if cur_map_num == cur_map_quant:
+            # move to the begining
+            new_pointer = 0x10000+ cur_map_quant
+        else:
+            # increase pointer
+            new_pointer = int(map_got[0].info) + 0x10000
+        # move pointer
+        map_got[0].info = str(new_pointer)
+        map_got[0].put()
+
+        # get that map
+        map_query = TreasureMap.query(TreasureMap.map_id == cur_map_num)
+        map_got = map_query.fetch(1)
+        map_str = map_got[0].info
+        
+        print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+
+        return map_str
+
+
     def get(self):
     
 #        self.response.write(json.dumps(['pics/1.jpg','pics/2.jpg'])
@@ -52,21 +109,36 @@ class MainPage(webapp2.RequestHandler):
             url = users.create_login_url(self.request.uri)
             url_linktext = 'Login'
 
+        
         template_values = {
             'greetings': greetings,
             'guestbook_name': urllib.quote_plus(guestbook_name),
             'url': url,
             'url_linktext': url_linktext,
+        # text description for cells
+            'json_cell_desc':  json.dumps([textinfo]),
         #creating template variables
-            'json_data':  json.dumps(
-                ['small_pics/wat.png', 'small_pics/trp.png', 'small_pics/em1.png', 'small_pics/fob.png', 'small_pics/pln.png', 'small_pics/msb.png', 'small_pics/esr.png', 'small_pics/ice.png', 'small_pics/3mc.png', 'small_pics/mfs.png', 'small_pics/wat.png', 'small_pics/msb.png', 'small_pics/3mc.png', 'small_pics/em1.png', 'small_pics/mtd.png', 'small_pics/cav.png', 'small_pics/frt.png', 'small_pics/2cc.png', 'small_pics/em1.png', 'small_pics/mss.png', 'small_pics/trp.png', 'small_pics/jng.png', 'small_pics/cnn.png', 'small_pics/4mc.png', 'small_pics/crd.png', 'small_pics/frt.png', 'small_pics/mds.png', 'small_pics/em1.png', 'small_pics/4cc.png', 'small_pics/mss.png', 'small_pics/ice.png', 'small_pics/mlk.png', 'small_pics/erq.png', 'small_pics/em1.png', 'small_pics/3mc.png', 'small_pics/crd.png', 'small_pics/drg.png', 'small_pics/crb.png', 'small_pics/1br.png', 'small_pics/trp.png', 'small_pics/3br.png', 'small_pics/1cc.png', 'small_pics/cnn.png', 'small_pics/ice.png', 'small_pics/mds.png', 'small_pics/mdb.png', 'small_pics/gnb.png', 'small_pics/jng.png', 'small_pics/msb.png', 'small_pics/3cc.png', 'small_pics/2cc.png', 'small_pics/crd.png', 'small_pics/ice.png', 'small_pics/mss.png', 'small_pics/pst.png', 'small_pics/em1.png', 'small_pics/crd.png', 'small_pics/1br.png', 'small_pics/fob.png', 'small_pics/4cc.png', 'small_pics/5cc.png', 'small_pics/cav.png', 'small_pics/mtd.png', 'small_pics/phs.png', 'small_pics/em1.png', 'small_pics/mfs.png', 'small_pics/cav.png', 'small_pics/3cc.png', 'small_pics/mfd.png', 'small_pics/5mc.png', 'small_pics/2mc.png', 'small_pics/2cc.png', 'small_pics/frd.png', 'small_pics/2cc.png', 'small_pics/mtd.png', 'small_pics/mfs.png', 'small_pics/1cc.png', 'small_pics/2cc.png', 'small_pics/em1.png', 'small_pics/mds.png', 'small_pics/ice.png', 'small_pics/em1.png', 'small_pics/ice.png', 'small_pics/em1.png', 'small_pics/em1.png', 'small_pics/bgn.png', 'small_pics/1cc.png', 'small_pics/3mc.png', 'small_pics/2br.png', 'small_pics/em1.png', 'small_pics/drg.png', 'small_pics/em1.png', 'small_pics/em1.png', 'small_pics/3gn.png', 'small_pics/3cc.png', 'small_pics/esr.png', 'small_pics/mfd.png', 'small_pics/1cc.png', 'small_pics/1br.png', 'small_pics/2mc.png', 'small_pics/em1.png', 'small_pics/jng.png', 'small_pics/em1.png', 'small_pics/4mc.png', 'small_pics/2mc.png', 'small_pics/em1.png', 'small_pics/em1.png', 'small_pics/2mc.png', 'small_pics/mdb.png', 'small_pics/esr.png', 'small_pics/wat.png', 'small_pics/mdb.png', 'small_pics/cav.png', 'small_pics/2mc.png', 'small_pics/esr.png', 'small_pics/mfd.png', 'small_pics/mlk.png', 'small_pics/ftu.png', 'small_pics/1cc.png', 'small_pics/2br.png', 'small_pics/wat.png']
-            )
+            #'json_data':  json.dumps(assemble(get_map_str_abb()))
+            'json_data':  json.dumps(assemble(self.c_get_map_str_abb())),
         }
         #self.response.write(template_values['json_data'])
-        self.response.write("Welcome to Jackal balanced\n")
+
+        self.response.write("Welcome to Jackal balanced<br>")
 
         template = JINJA_ENVIRONMENT.get_template('index.html')
         self.response.write(template.render(template_values))
+
+        
+class ToMainPage(webapp2.RequestHandler):
+    def get(self):
+        self.redirect("/main")
+
+
+class TestPage(webapp2.RequestHandler):
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('test_page.html')
+        self.response.write(template.render())
+
 
 class Image(webapp2.RequestHandler):
     def get(self):
@@ -91,10 +163,11 @@ class Guestbook(webapp2.RequestHandler):
         #greeting.put()
         self.redirect('/?' + urllib.urlencode(
             {'guestbook_name': guestbook_name}))
-
-
+            
 application = webapp2.WSGIApplication([
-        ('/', MainPage),
+        ('/', ToMainPage),
+        ('/test', TestPage),
+        ('/main', MainPage),
         ('/sign', Guestbook),
 #        ('/cron_tasks/map_generator', MapGenerator),
 ], debug=True)

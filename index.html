@@ -44,7 +44,7 @@
             width: 200;
             height: 584;
             margin-left: 25;
-            background: white;
+            background: lightcyan;
             
             padding: 5px;
             border-radius: 10px;
@@ -156,7 +156,7 @@
             <br>
             </div>
             <div class="info field" >
-                <img class="InfoImage InfoMargin" src="small_pics_origin/foo.png"><br>
+                <img class="InfoImage InfoMargin" id="picinfo" src="small_pics_origin/foo.png"><br>
                 <div class="InfoMargin InfoText" id="textinfo" >
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
                 </div>
@@ -165,7 +165,9 @@
 
         
         <script>
-            var results = "{{ json_data }}";
+            // results will contain all data about cells of the island
+            //   access through index from 0 to 120
+            var results = JSON.parse('{{ json_data | safe}}');
             function preloadCells() {
                 var id=0;
                 var id_right=0;
@@ -224,11 +226,13 @@
             }
             function getSrc(img){
                 // procedure to show info in right block
-                showinfo();
+                // show info about this cell
+                showinfo(results[img.id]);
+                // if it hasn't opened yet show the cell
                 if (img.src.slice(-18) == "small_pics/tin.png") {
-                    var start = 6 + (18 + 12)*img.id;
-                    //alert(start);
-                    img.src = results.slice(start, start+18);
+                    var start = img.id;
+                    //alert(results[1]);
+                    img.src = results[start];
                     // need to rotate only if it is one of the following:
                     //   cnn, mdb, mds, msb, mss, mtd
                     if ((img.src.slice(-7,-4) == "cnn") || 
@@ -248,11 +252,13 @@
                     }
                 }
             };
-            function showinfo() {
+            // first argument is a cell abbreviation (cnn, mdb, mlk and so on)
+            function showinfo(cell_path) {
                 // return random number between 0 and 3
                 var some_data = JSON.parse('{{ json_cell_desc | safe}}');
                 document.getElementById("textinfo").innerHTML = "";
-                document.getElementById("textinfo").innerHTML = some_data[0]['fob'];
+                document.getElementById("picinfo").src = cell_path;
+                document.getElementById("textinfo").innerHTML = some_data[0][cell_path.slice(-7,-4)];
             }
 
             function foobar() {
