@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 {% autoescape true %}
 <html>
     <head>
@@ -7,29 +7,68 @@
         <script type="text/javascript" src="/_ah/channel/jsapi"></script>
     </head>
     <style>
+        {% set cellside=50 %}
+
         .game-field {
             margin: 0 auto;
-            width: 748px;
+            width: 1000px;
         
-        }        
+        }   
+        .field {
+            float: left;
+        }
+        .lightgreenback {
+            background: lightgreen;
+        }
 
         .Cell{
-            height: 68px;
-            width: 68px;
+            height: {{ cellside + 4 }};
+            width: {{ cellside + 4 }};
             text-decoration: none;
             display: inline-block;
             position: relative;
             float:left;
         }
         .ImageCentred {
+            height: {{ cellside }};
             padding: 2px;
-        }        
+        }
         .ImageCentred:hover {
             outline-offset: -2px;
             border-radius: 5px;
             outline-color: lightblue;
             box-shadow: 0px 0px 0px 2px darkgreen;
         }        
+
+        .info {
+            width: 200;
+            height: 584;
+            margin-left: 25;
+            background: white;
+            
+            padding: 5px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.5);
+        }
+        
+        .InfoImage {
+            height: 180;
+            padding: 2px;
+            
+            border: 3px solid darkgreen;
+            border-radius: 20px;
+            -moz-border-radius: 20px;
+            -webkit-border-radius: 20px;
+        }
+        
+        .InfoMargin {
+            margin: 7px;
+        }
+
+        .InfoText {
+            font-size: 14;
+            font-family: Verdana, Helvetica, sans-serif;
+        }
 
         .img.small {
             height: 64px;
@@ -66,7 +105,10 @@
         }
         
         .bar {
-            padding: 18px;
+            width: 200;
+            height: 748;
+            background: red;
+            
         }
         
         .foo {
@@ -84,36 +126,44 @@
         <hr>
         
 
-        <div class="Cell foo">
+<!--         <div class="Cell foo">
             <img class="bar" src="small_pics/tin.png">
         </div>
-
+ -->
         <br>
 
 
         <div class="game-field">
-        {% for i in range(11) %}
+            <div class="field">
+            {% for i in range(11) %}
 
-            {% for j in range(11) %}
-                <div class="Cell">
-                {% if i*11+j == 0 %}
-                    <img class="ImageCentred" src="small_pics/wlu.png" id={{ i*11 + j }} onclick="getSrc(this)">
-                {% elif i*11+j == 10 %}
-                    <img class="ImageCentred" src="small_pics/wru.png" id={{ i*11 + j }} onclick="getSrc(this)">
-                {% elif i*11+j == 110 %}
-                    <img class="ImageCentred" src="small_pics/wld.png" id={{ i*11 + j }} onclick="getSrc(this)">
-                {% elif i*11+j == 120 %}
-                    <img class="ImageCentred" src="small_pics/wrd.png" id={{ i*11 + j }} onclick="getSrc(this)">
-                {% else %}
-                    <img class="ImageCentred" src="small_pics/tin.png" id={{ i*11 + j }} onclick="getSrc(this)">
-                {% endif %}
-                </div>
+                {% for j in range(11) %}
+                    <div class="Cell">
+                    {% if i*11+j == 0 %}
+                        <img class="ImageCentred" src="small_pics/wlu.png" id={{ i*11 + j }} onclick="getSrc(this)">
+                    {% elif i*11+j == 10 %}
+                        <img class="ImageCentred" src="small_pics/wru.png" id={{ i*11 + j }} onclick="getSrc(this)">
+                    {% elif i*11+j == 110 %}
+                        <img class="ImageCentred" src="small_pics/wld.png" id={{ i*11 + j }} onclick="getSrc(this)">
+                    {% elif i*11+j == 120 %}
+                        <img class="ImageCentred" src="small_pics/wrd.png" id={{ i*11 + j }} onclick="getSrc(this)">
+                    {% else %}
+                        <img class="ImageCentred" src="small_pics/tin.png" id={{ i*11 + j }} onclick="getSrc(this)">
+                    {% endif %}
+                    </div>
+                {% endfor %}
+                <br>
+                </p>
             {% endfor %}
-            <br>
-            </p>
-        {% endfor %}
 
-        <br>
+            <br>
+            </div>
+            <div class="info field" >
+                <img class="InfoImage InfoMargin" src="small_pics_origin/foo.png"><br>
+                <div class="InfoMargin InfoText" id="textinfo" >
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                </div>
+            </div>
         </div>
 
         
@@ -174,11 +224,10 @@
                         Img_mid.src = results.slice(id_mid, id_mid+18);
                     }
                 }
-                  
-                alert('Success!!');
             }
             function getSrc(img){
-
+                // procedure to show info in right block
+                showinfo();
                 if (img.src.slice(-18) == "small_pics/tin.png") {
                     var start = 6 + (18 + 12)*img.id;
                     //alert(start);
@@ -202,14 +251,20 @@
                     }
                 }
             };
-            function foobar(img) {
+            function showinfo() {
                 // return random number between 0 and 3
-                angle = Math.floor((Math.random()*4));
-                // get the random angle 0, 90, 180 or 270
-                angle = angle * 90;
-                img.height = 64;
-                
-                img.className = "rotor"+angle;
+                var some_data = JSON.parse('{{ json_cell_desc | safe}}');
+                document.getElementById("textinfo").innerHTML = "";
+                document.getElementById("textinfo").innerHTML = some_data[0]['fob'];
+            }
+
+            function foobar() {
+                // return random number between 0 and 3
+                var some_data = JSON.parse('{{ json_cell_desc | safe}}');
+                alert(some_data[0]['fob']);
+                document.getElementById("textinfo").innerHTML = "";
+                document.getElementById("textinfo").innerHTML = some_data[0]['fob'];
+                alert("Success!!");
             }
         
         </script>
