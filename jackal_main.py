@@ -111,7 +111,7 @@ class MainPage(webapp2.RequestHandler):
 
         # for dbg it is an outstanding string
         json_map = assemble(self.c_get_map_str_abb())
-        self.response.write("Earthquake on cell -" + str(json_map.index('small_pics/erq.png')) + "-<br>")
+        #self.response.write("Earthquake on cell -" + str(json_map.index('small_pics/erq.png')) + "-<br>")
         
         template_values = {
             'greetings': greetings,
