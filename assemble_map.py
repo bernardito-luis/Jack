@@ -78,10 +78,10 @@ def assemble(cur_map):
         island.append('_')
 
     # block corners
-    island[0] = 'b'
-    island[10] = 'b'
-    island[11*10] = 'b'
-    island[11*10+10] = 'b'
+    island[0] = 'wlu.png'
+    island[10] = 'wru.png'
+    island[11*10] = 'wld.png'
+    island[11*10+10] = 'wrd.png'
 
     # place gold
     buf = '~_^'
@@ -110,9 +110,6 @@ def assemble(cur_map):
     # generate json-suit list
     json_list = []    
     for cell in island:
-        if cell == "b":
-            json_list.append('small_pics/wat.png')
-            continue
         if cell[:3] == "emp":
             json_list.append('small_pics/em1.png')
             continue

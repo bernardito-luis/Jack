@@ -14,8 +14,11 @@
             width: 1000px;
         
         }   
-        .field {
+        .disposition {
             float: left;
+        }
+        .field {
+            width: 594;
         }
         .lightgreenback {
             background: lightgreen;
@@ -34,9 +37,8 @@
             padding: 2px;
         }
         .ImageCentred:hover {
-            outline-offset: -2px;
+            /*outline-offset: -2px;*/
             border-radius: 5px;
-            outline-color: lightblue;
             box-shadow: 0px 0px 0px 2px darkgreen;
         }        
 
@@ -53,21 +55,59 @@
         
         .InfoImage {
             height: 180;
-            padding: 2px;
+            padding: 4px;
             
             border: 3px solid darkgreen;
             border-radius: 20px;
-            -moz-border-radius: 20px;
+            -o-border-radius: 20px;
             -webkit-border-radius: 20px;
         }
         
         .InfoMargin {
-            margin: 7px;
+            margin: 4px;
         }
 
         .InfoText {
             font-size: 14;
             font-family: Verdana, Helvetica, sans-serif;
+        }
+
+        .swapbutton {
+			/*-webkit-touch-callout: none;*/
+			-webkit-user-select: none;
+			-o-user-select: none;
+			user-select: none;
+
+        	height: 40;
+        	width: 180;
+        	margin-left: 10;
+        	margin-right: 10;
+			text-align: center;
+			display: table-cell;
+			vertical-align: middle;
+
+        	border: 3px solid rgba(0, 100, 0, 0.1);
+        	border-radius: 5px;
+        	background: rgba(0, 100, 0, 0.1);
+        }
+
+        .swapbutton_ready {
+			/*-webkit-touch-callout: none;*/
+			-webkit-user-select: none;
+			-o-user-select: none;
+			user-select: none;
+
+        	height: 40;
+        	width: 180;
+        	margin-left: 10;
+        	margin-right: 10;
+			text-align: center;
+			display: table-cell;
+			vertical-align: middle;
+
+        	border: 3px solid rgba(0, 100, 0, 0.5);
+        	border-radius: 5px;
+        	background: rgba(0, 100, 0, 0.5);
         }
 
         .img.small {
@@ -77,33 +117,67 @@
         {% set angle = ['0deg','90deg','180deg','270deg']|random %}
         .rotated {
             -webkit-transform   : rotate({{ angle }});
-            -moz-transform      : rotate({{ angle }});
+            -o-transform      	: rotate({{ angle }});
             transform           : rotate({{ angle }});
         }
         .rotor0 {
             -webkit-transform: rotate(0deg);
-            -moz-transform: rotate(0deg);
+            -o-transform: rotate(0deg);
             transform: rotate(0deg);
         }
 
         .rotor90 {
             -webkit-transform: rotate(90deg);
-            -moz-transform: rotate(90deg);
+            -o-transform: rotate(90deg);
             transform: rotate(90deg);
         }
 
         .rotor180 {
             -webkit-transform: rotate(180deg);
-            -moz-transform: rotate(180deg);
+            -o-transform: rotate(180deg);
             transform: rotate(180deg);
         }
 
         .rotor270 {
             -webkit-transform: rotate(270deg);
-            -moz-transform: rotate(270deg);
+            -o-transform: rotate(270deg);
             transform: rotate(270deg);
         }
         
+        /*Animation stuff*/
+        .animated_not {
+            border-radius: 5px;
+            box-shadow: 0px 0px 0px 2px rgba(0, 100, 0, 1);
+        }
+
+        .animated {
+			-webkit-animation: borderblinking 3s infinite;
+			-o-animation: borderblinking 3s infinite;
+			animation: borderblinking 3s infinite;
+
+            border-radius: 5px;
+            box-shadow: 0px 0px 0px 2px rgba(255, 69, 0, 1);
+        }
+
+        @-webkit-keyframes borderblinking {
+        	0% { box-shadow: 0px 0px 0px 2px rgba(255, 69, 0, 1); }
+        	50% { box-shadow: 0px 0px 0px 2px rgba(255, 69, 0, 0.4); }
+        	100% { box-shadow: 0px 0px 0px 2px rgba(255, 69, 0, 1); }
+        }
+
+        @-o-keyframes borderblinking {
+        	0% { box-shadow: 0px 0px 0px 2px rgba(255, 69, 0, 1); }
+        	50% { box-shadow: 0px 0px 0px 2px rgba(255, 69, 0, 0.4); }
+        	100% { box-shadow: 0px 0px 0px 2px rgba(255, 69, 0, 1); }
+        }
+
+        @keyframes borderblinking {
+        	0% { box-shadow: 0px 0px 0px 2px rgba(255, 69, 0, 1); }
+        	50% { box-shadow: 0px 0px 0px 2px rgba(255, 69, 0, 0.4); }
+        	100% { box-shadow: 0px 0px 0px 2px rgba(255, 69, 0, 1); }
+        }
+
+
         .bar {
             width: 200;
             height: 748;
@@ -119,7 +193,7 @@
         }
 
     </style>
-    <body onLoad="preloadCells()">
+    <body class="pirate" onLoad="preloadCells()">
         <div name="description"><p>На этой страничке представлено поле для настольной игры "Шакал". <br> Вся прелесть этой настольной игры заключается в том, что поле в каждой новой партии отличается от всех предыдущих. Игроки сами его создают - просто переворачивают 117 одинаковых клеточек, перемешивают их и раскладывают рубашкой вверх. Бывает так, что кому-то изначельно достается больше золота (ближе лежит к кораблю игрока), такие случаи не редкость. Цель этого web-приложения генерировать случайным образом поле так, чтобы всем доставалось примерно одинаково.</p></div>
         <hr>
 
@@ -131,7 +205,7 @@
 
 
         <div class="game-field">
-            <div class="field">
+            <div class="disposition field">
             {% for i in range(11) %}
 
                 {% for j in range(11) %}
@@ -155,8 +229,8 @@
 
             <br>
             </div>
-            <div class="info field" >
-                <img class="InfoImage InfoMargin" id="picinfo" src="small_pics_origin/foo.png"><br>
+            <div class="info disposition" >
+                <img class="InfoImage InfoMargin" id="picinfo" src="large_pics/logo.jpg"><br>
                 <div class="InfoMargin InfoText" id="textinfo" >
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
                 </div>
@@ -172,6 +246,7 @@
                 var id=0;
                 var id_right=0;
                 var id_rleft=0;
+                // for corners 3x3
                 var corners = [0, 8, 88, 96];
                 // preload the first 4 rectangles 3x5
                 for (var i=0; i<3; i++) {
@@ -180,25 +255,29 @@
                         Img_t = new Image();
                         id_t = i*11 + j;
                         id_b = 120 - id_t;
-                        id_t = 6 + (18 + 12)*id_t;
-                        Img_t.src = results.slice(id_t, id_t+18);
+                        //id_t = 6 + (18 + 12)*id_t;
+                        //Img_t.src = results.slice(id_t, id_t+18);
+                        Img_t.src = results[id_t];
                         
                         // right (and calculate id for left)
                         Img_r = new Image();
                         id_r = j*11 + i;
                         id_l = 120 - id_r;
-                        id_r = 6 + (18 + 12)*id_r;
-                        Img_r.src = results.slice(id_r, id_r+18);
+                        //id_r = 6 + (18 + 12)*id_r;
+                        //Img_r.src = results.slice(id_r, id_r+18);
+                        Img_r.src = results[id_r];
                         
                         // bottom
                         Img_b = new Image();
-                        id_b = 6 + (18 + 12)*id_b;
-                        Img_b.src = results.slice(id_b, id_b+18);
+                        //id_b = 6 + (18 + 12)*id_b;
+                        //Img_b.src = results.slice(id_b, id_b+18);
+                        Img_b.src = results[id_b];
                         
                         // left
                         Img_l = new Image();
-                        id_l = 6 + (18 + 12)*id_t;
-                        Img_l.src = results.slice(id_l, id_l+18);
+                        //id_l = 6 + (18 + 12)*id_t;
+                        //Img_l.src = results.slice(id_l, id_l+18);
+                        Img_l.src = results[id_l];
                         
                         
                     }
@@ -209,8 +288,9 @@
                         for (var k=0; k<4; k++) {
                             Img_crn = new Image();
                             id_crn = i*11 + j + corners[k];
-                            id_crn = 6 + (18 + 12)*id_crn;
-                            Img_crn.src = results.slice(id_crn, id_crn+18);
+                            //id_crn = 6 + (18 + 12)*id_crn;
+                            //Img_crn.src = results.slice(id_crn, id_crn+18);
+                            Img_crn.src = results[id_crn];
                         }
                     }
                 }
@@ -219,12 +299,114 @@
                     for (var j=3; j<8; j++) {
                         Img_mid = new Image();
                         id_mid = i*11 + j;
-                        id_mid = 6 + (18 + 12)*id_mid;
-                        Img_mid.src = results.slice(id_mid, id_mid+18);
+                        //id_mid = 6 + (18 + 12)*id_mid;
+                        //Img_mid.src = results.slice(id_mid, id_mid+18);
+                        Img_mid.src = results[id_mid];
                     }
                 }
             }
+
+            var earthquake_is_now = false;
+            // procedure to swap two cells after an earthquake
+            function swap_cells() {
+            	if ('swapbutton' == document.getElementById("swap").className)
+            		return;
+            	//alert('swap');
+
+            	// swap
+            	alert(document.getElementById(exchange1).className + " "+ document.getElementById(exchange2).className);
+            	var buf = document.getElementById(exchange1).src;
+            	document.getElementById(exchange1).src = document.getElementById(exchange2).src;
+            	document.getElementById(exchange2).src = buf;
+            	buf = document.getElementById(exchange1).className.slice(0,-12);
+            	document.getElementById(exchange1).className = document.getElementById(exchange2).className.slice(0,-12);
+            	document.getElementById(exchange2).className = buf;
+            	buf = results[exchange1];
+            	results[exchange1] = results[exchange2];
+            	results[exchange2] = buf;
+
+            	// deselect
+            	// document.getElementById(exchange1).className = 'ImageCentred';
+            	// document.getElementById(exchange2).className = 'ImageCentred';
+            	earthquake_is_now = false;	
+            }
+            // exchange1 is blinking one - deprecated
+            var exchange1 = '1';
+            var exchange2 = '119';
             function getSrc(img){
+            	if (earthquake_is_now) {
+            		// corner clicked => avoid a piece of sea inside the island %-)
+					if ((img.src.slice(-7,-4) == "wlu") || 
+                        (img.src.slice(-7,-4) == "wru") ||
+                        (img.src.slice(-7,-4) == "wrd") ||
+                        (img.src.slice(-7,-4) == "wld")) {
+						return 0;
+					}
+
+            		// clicked on self or another exchange cell => stop blink, prepare to swap
+            		if ( img.id == parseInt(exchange1) ) {
+            			// exchange1 clicked
+            			// stop animation if it was animated. animate in other case
+            			if ("animated" == document.getElementById(exchange1).className.slice(-8)) {
+            				document.getElementById(exchange1).className = document.getElementById(exchange1).className.slice(0,-8) + 'animated_not';
+            				// light up the swap button if second is not animated
+	            			if ("animated_not" == document.getElementById(exchange2).className.slice(-12)) {
+	            				document.getElementById("swap").className = "swapbutton_ready";
+	            			}
+	            			else {
+	            				document.getElementById("swap").className = "swapbutton";
+	            			}
+            			}
+            			else {
+            				document.getElementById(exchange1).className = document.getElementById(exchange1).className.slice(0,-12) + 'animated';
+            				// set unready
+	           				document.getElementById("swap").className = "swapbutton";
+            			}
+            		}
+
+            		// same for second
+            		if ( img.id == parseInt(exchange2) ) {
+            			// exchange2 clicked
+            			// stop animation if it was animated. animate in other case
+            			if ( "animated" == document.getElementById(exchange2).className.slice(-8) ) {
+            				document.getElementById(exchange2).className = document.getElementById(exchange2).className.slice(0,-8) + 'animated_not';
+            				// light up the swap button if second is not animated
+	            			if ( "animated_not" == document.getElementById(exchange1).className.slice(-12) ) {
+	            				document.getElementById("swap").className = "swapbutton_ready";
+	            			}
+	            			else {
+	            				document.getElementById("swap").className = "swapbutton";
+	            			}
+            			}
+            			else {
+            				document.getElementById(exchange2).className = document.getElementById(exchange2).className.slice(0,-12) + 'animated';
+            				// set unready
+	           				document.getElementById("swap").className = "swapbutton";
+            			}
+            		}
+
+            		// other cell was clicked and some was blinking(animated) move blinking frame
+            		if ( (img.id != parseInt(exchange1)) && (img.id != parseInt(exchange2)) 
+            			&& ( "swapbutton" == document.getElementById("swap").className) ) {
+
+            			if ( 'animated' == document.getElementById(exchange1).className.slice(-8) ) {
+            				// first was animated
+            				document.getElementById(exchange1).className = document.getElementById(exchange1).className.slice(0,-9);
+            				exchange1 = String(img.id);
+            				document.getElementById(exchange1).className = document.getElementById(exchange1).className + ' animated';
+            			}
+            			else {
+            				// second was animated
+            				document.getElementById(exchange2).className = document.getElementById(exchange2).className.slice(0,-9);
+            				exchange2 = String(img.id);
+            				document.getElementById(exchange2).className = document.getElementById(exchange2).className + ' animated';
+            			}
+
+					}
+
+
+            		return 0;
+            	}
                 // procedure to show info in right block
                 // show info about this cell
                 showinfo(results[img.id]);
@@ -249,6 +431,19 @@
                         //img.height = 64;                
                         //img.width = 64;                
                         img.className = "ImageCentred " + "rotor"+angle;
+                        //alert(img.className);
+                    }
+                    
+                    // special case for earthquake
+                    if ('small_pics/erq.png' == results[start]) {
+                        earthquake_is_now = true;
+                        document.getElementById(exchange1).className = document.getElementById(exchange1).className + " animated";
+                        document.getElementById(exchange2).className = document.getElementById(exchange2).className + " animated_not";
+
+                       	// add swap button
+                        document.getElementById("textinfo").innerHTML = document.getElementById("textinfo").innerHTML + '<br><br>' + '<div id="swap" class="swapbutton" onClick="swap_cells()">Передернуть фишки</div>';
+
+
                     }
                 }
             };

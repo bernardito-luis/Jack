@@ -109,6 +109,9 @@ class MainPage(webapp2.RequestHandler):
             url = users.create_login_url(self.request.uri)
             url_linktext = 'Login'
 
+        # for dbg it is an outstanding string
+        json_map = assemble(self.c_get_map_str_abb())
+        self.response.write("Earthquake on cell -" + str(json_map.index('small_pics/erq.png')) + "-<br>")
         
         template_values = {
             'greetings': greetings,
@@ -119,7 +122,7 @@ class MainPage(webapp2.RequestHandler):
             'json_cell_desc':  json.dumps([textinfo]),
         #creating template variables
             #'json_data':  json.dumps(assemble(get_map_str_abb()))
-            'json_data':  json.dumps(assemble(self.c_get_map_str_abb())),
+            'json_data':  json.dumps(json_map),
         }
         #self.response.write(template_values['json_data'])
 
@@ -171,3 +174,9 @@ application = webapp2.WSGIApplication([
         ('/sign', Guestbook),
 #        ('/cron_tasks/map_generator', MapGenerator),
 ], debug=True)
+
+
+
+
+
+# 1330-1002-1242-7054-4175-8247

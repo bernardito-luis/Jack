@@ -1,5 +1,5 @@
 application: jackal-balanced
-version: 6
+version: 8
 runtime: python27
 api_version: 1
 threadsafe: yes
@@ -23,6 +23,9 @@ handlers:
 
 - url: /small_pics
   static_dir: small_pics
+
+- url: /large_pics
+  static_dir: large_pics
 
 - url: /.*
   script: jackal_main.application
