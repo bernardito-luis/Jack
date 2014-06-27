@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+    <head>
+        <title> Jackal.balanced </title>
+        <script type="text/javascript" src="/_ah/channel/jsapi"></script>
+        <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+    </head>
+    <style>
+		@font-face {
+			font-family: Flibustiere;
+			src: url(fonts/flibustiere.ttf);
+		}
+
+		.pirate {
+            margin: 0 auto;
+            width: 1000px;
+		}
+		.dummy {
+			display: inline-block;
+		}
+		.foot {
+			display: inline-block;
+			font-family: Flibustiere;
+			width: 834px;
+			height: 35px;
+
+			/*vertical-align for one line only!! */
+			line-height: 40px;
+			text-align: center;
+			font-size: 10pt;
+
+		}
+		/*top navigation 3 buttons*/
+		.top_nav {
+			margin: 0 auto;
+			width: 834px;
+			padding-left: 145px;
+			padding-right: 145px;
+
+			/*height: 40px;*/
+			/*display: inline-block;*/
+			float: left;
+		}
+		.ButtonNav {
+			font-family: Flibustiere;
+			background: rgb(224, 255, 255);
+			/*border-style: solid;*/
+			border: 3px solid lightgrey;
+			border-radius: 10px;
+
+			margin: 5px;
+			padding-right: 15px;
+			padding-left: 15px;
+
+			height: 35px;
+			/*vertical-align for one line only!! */
+			line-height: 40px;
+			text-align: center;
+			font-size: 14pt;
+
+			cursor: pointer;
+			display: inline-block;
+
+			/*box-sizing: content-box;*/
+		}
+		.WidthMainButton {
+			width: auto;
+		}
+		.WidthBeginButton {
+			width: auto;
+		}
+		.WidthAboutButton {
+			width: auto;
+		}
+		.ButtonNav:hover {
+			border: 3px solid green;
+			box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+		}
+
+	{% block additonal_style %}
+	{% endblock %}
+
+    </style>
+    <body class="pirate" onLoad="preloadAllCells()">
+
+<!--         <div class="Cell foo">
+            <img class="bar" src="small_pics/tin.png">
+        </div>
+ -->
+        <br>
+
+		<div class="top_nav">
+			<a class="ButtonNav WidthMainButton" style="text-decoration: none; color:#000000;" href='/main'>Главная</a>
+			<a class="ButtonNav WidthBeginButton" style="text-decoration: none; color:#000000;" href='/smth'>Начать партию</a>
+			<a class="ButtonNav WidthAboutButton" style="text-decoration: none; color:#000000;" href='/about'>О проекте</a>
+		</div>
+		<br>
+		<div style="width:834px; display:inline-block;">
+			<hr>	
+		</div>
+
+{% block content %}
+{% endblock %}
+
+		<div class="dummy" style="width:804;height:200px;"></div>
+		<footer class="foot"><hr>Good Luck & Have Fun!<br>Max Belkin</footer>
+<!--  		<div class="test">
+            <img class="ImageCentred rotor270" src="fonts/mss.png" id="2" onclick="getRotor(this.className)">
+		</div>
+ -->
+
+<script>
+	function preloadAllCells() {
+		// dummy preload
+		var pic_names = ['wlu', 'wld', 'wru', 'wrd', 'em1', 'mss', 'mds', 'msb', 'mdb', 'mtd', 'mfd', 'mfs', 'mlk', 'ice', 'cav', 'pln', 'cnn', 'fob', '2mc', '3mc', '4mc', '5mc', '5cc', '4cc', '3cc', '2cc', '1cc', '3gn', '1br', '2br', '3br', 'trp', 'crd', 'gnb', 'frt', 'ftu', 'crb', 'phs', 'bgn', 'pst', 'frd', 'esr', 'erq', 'jng', 'drg']
+
+		var buf_name = '';
+		buf_name = 'small_pics/tin.png';
+		Img = new Image();
+		Img.src = buf_name;
+		buf_name = 'large_pics/logo.jpg';
+		Img = new Image();
+		Img.src = buf_name;
+		for (var i = 0; i < pic_names.length; i++) {
+			buf_name = 'small_pics/'+pic_names[i]+'.png'
+            Img_small = new Image();
+	        Img_small.src = buf_name;
+			buf_name = 'large_pics/'+pic_names[i]+'.png'
+            Img_large = new Image();
+	        Img_large.src = buf_name;
+		}
+	}
+
+	{% block additional_script %}
+	{% endblock %}
+
+</script>
+{% endautoescape %}

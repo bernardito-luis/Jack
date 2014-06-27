@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 {% autoescape true %}
 <html>
     <head>
         <title> Jackal.balanced </title>
-        <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
         <script type="text/javascript" src="/_ah/channel/jsapi"></script>
+        <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
     </head>
     <style>
         {% set cellside=50 %}
@@ -69,7 +69,7 @@
 
         .InfoText {
             font-size: 14;
-            font-family: Verdana, Helvetica, sans-serif;
+            font-family: Flibustiere;
         }
 
         .swapbutton {
@@ -85,6 +85,8 @@
 			text-align: center;
 			display: table-cell;
 			vertical-align: middle;
+
+			cursor: default;
 
         	border: 3px solid rgba(0, 100, 0, 0.1);
         	border-radius: 5px;
@@ -104,6 +106,8 @@
 			text-align: center;
 			display: table-cell;
 			vertical-align: middle;
+
+			cursor: pointer;
 
         	border: 3px solid rgba(0, 100, 0, 0.5);
         	border-radius: 5px;
@@ -192,8 +196,79 @@
 
         }
 
+		@font-face {
+			font-family: Flibustiere;
+			src: url(fonts/flibustiere.ttf);
+		}
+
+		.pirate {
+            margin: 0 auto;
+            width: 1000px;
+		}
+		.dummy {
+			display: inline-block;
+		}
+		.foot {
+			display: inline-block;
+			font-family: Flibustiere;
+			width: 834px;
+			height: 35px;
+
+			/*vertical-align for one line only!! */
+			line-height: 40px;
+			text-align: center;
+			font-size: 10pt;
+
+		}
+		/*top navigation 3 buttons*/
+		.top_nav {
+			margin: 0 auto;
+			width: 834px;
+			padding-left: 145px;
+			padding-right: 145px;
+
+			/*height: 40px;*/
+			/*display: inline-block;*/
+			float: left;
+		}
+		.ButtonNav {
+			font-family: Flibustiere;
+			background: rgb(224, 255, 255);
+			/*border-style: solid;*/
+			border: 3px solid lightgrey;
+			border-radius: 10px;
+
+			margin: 5px;
+			padding-right: 15px;
+			padding-left: 15px;
+
+			height: 35px;
+			/*vertical-align for one line only!! */
+			line-height: 40px;
+			text-align: center;
+			font-size: 14pt;
+
+			cursor: pointer;
+			display: inline-block;
+
+			/*box-sizing: content-box;*/
+		}
+		.WidthMainButton {
+			width: auto;
+		}
+		.WidthBeginButton {
+			width: auto;
+		}
+		.WidthAboutButton {
+			width: auto;
+		}
+		.ButtonNav:hover {
+			border: 3px solid green;
+			box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+		}
+
     </style>
-    <body class="pirate" onLoad="preloadCells()">
+    <body class="pirate">
         <div name="description"><p>На этой страничке представлено поле для настольной игры "Шакал". <br> Вся прелесть этой настольной игры заключается в том, что поле в каждой новой партии отличается от всех предыдущих. Игроки сами его создают - просто переворачивают 117 одинаковых клеточек, перемешивают их и раскладывают рубашкой вверх. Бывает так, что кому-то изначельно достается больше золота (ближе лежит к кораблю игрока), такие случаи не редкость. Цель этого web-приложения генерировать случайным образом поле так, чтобы всем доставалось примерно одинаково.</p></div>
         <hr>
 
@@ -203,8 +278,18 @@
  -->
         <br>
 
+		<div class="top_nav">
+			<a class="ButtonNav WidthMainButton" style="text-decoration: none; color:#000000;" href='#'>Главная</a>
+			<a class="ButtonNav WidthBeginButton" style="text-decoration: none; color:#000000;" href='#'>Начать партию</a>
+			<a class="ButtonNav WidthAboutButton" style="text-decoration: none; color:#000000;" href='#'>О проекте</a>
+		</div>
+		<br>
+		<div style="width:834px; display:inline-block;">
+			<hr>	
+		</div>
 
-        <div class="game-field">
+
+        <div class="game-field" onLoad="preloadCells()">
             <div class="disposition field">
             {% for i in range(11) %}
 
@@ -230,18 +315,25 @@
             <br>
             </div>
             <div class="info disposition" >
+                <!-- <img class="InfoImage InfoMargin" id="picinfo" src="large_pics/logo.jpg"><br> old and right-->
                 <img class="InfoImage InfoMargin" id="picinfo" src="large_pics/logo.jpg"><br>
                 <div class="InfoMargin InfoText" id="textinfo" >
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                Вот остров, на котором вас ждут захватывающие приключения: золото, головокружительные высоты, ямы, пустыни, полеты на воздушных шарах и других средствах передвижения, бутылочки с интересным содержимым и, конечно же, драки, погони и прочие пиратские прелести.<br>
+				Время начинать! Белые ходят и ...
                 </div>
             </div>
         </div>
-
-        
+		<div class="dummy" style="width:804;height:200px;"></div>
+		<footer class="foot"><hr>Good Luck & Have Fun!<br>Max Belkin</footer>
+<!--  		<div class="test">
+            <img class="ImageCentred rotor270" src="fonts/mss.png" id="2" onclick="getRotor(this.className)">
+		</div>
+ -->
         <script>
             // results will contain all data about cells of the island
             //   access through index from 0 to 120
             var results = JSON.parse('{{ json_data | safe}}');
+            // alert(results[0]);
             function preloadCells() {
                 var id=0;
                 var id_right=0;
@@ -258,6 +350,9 @@
                         //id_t = 6 + (18 + 12)*id_t;
                         //Img_t.src = results.slice(id_t, id_t+18);
                         Img_t.src = results[id_t];
+                        // preload large(180x180) copy
+                        Img_t.src = 'large_pics/' + results[id_t].slice(-7);
+                        Img_t.src = 'small_pics/' + results[id_t].slice(-7);
                         
                         // right (and calculate id for left)
                         Img_r = new Image();
@@ -266,18 +361,27 @@
                         //id_r = 6 + (18 + 12)*id_r;
                         //Img_r.src = results.slice(id_r, id_r+18);
                         Img_r.src = results[id_r];
+                        // preload large(180x180) copy
+                        Img_r.src = 'large_pics/' + results[id_r].slice(-7);
+                        Img_r.src = 'small_pics/' + results[id_r].slice(-7);
                         
                         // bottom
                         Img_b = new Image();
                         //id_b = 6 + (18 + 12)*id_b;
                         //Img_b.src = results.slice(id_b, id_b+18);
                         Img_b.src = results[id_b];
+                        // preload large(180x180) copy
+                        Img_b.src = 'large_pics/' + results[id_b].slice(-7);
+                        Img_b.src = 'small_pics/' + results[id_b].slice(-7);
                         
                         // left
                         Img_l = new Image();
                         //id_l = 6 + (18 + 12)*id_t;
                         //Img_l.src = results.slice(id_l, id_l+18);
                         Img_l.src = results[id_l];
+                        // preload large(180x180) copy
+                        Img_l.src = 'large_pics/' + results[id_l].slice(-7);
+                        Img_l.src = 'small_pics/' + results[id_l].slice(-7);
                         
                         
                     }
@@ -291,6 +395,9 @@
                             //id_crn = 6 + (18 + 12)*id_crn;
                             //Img_crn.src = results.slice(id_crn, id_crn+18);
                             Img_crn.src = results[id_crn];
+	                        // preload large(180x180) copy
+	                        Img_crn.src = 'large_pics/' + results[id_crn].slice(-7);
+	                        Img_crn.src = 'small_pics/' + results[id_crn].slice(-7);
                         }
                     }
                 }
@@ -302,6 +409,9 @@
                         //id_mid = 6 + (18 + 12)*id_mid;
                         //Img_mid.src = results.slice(id_mid, id_mid+18);
                         Img_mid.src = results[id_mid];
+                        // preload large(180x180) copy
+                        Img_mid.src = 'large_pics/' + results[id_mid].slice(-7);
+                        Img_mid.src = 'small_pics/' + results[id_mid].slice(-7);
                     }
                 }
             }
@@ -311,10 +421,8 @@
             function swap_cells() {
             	if ('swapbutton' == document.getElementById("swap").className)
             		return;
-            	//alert('swap');
 
             	// swap
-            	alert(document.getElementById(exchange1).className + " "+ document.getElementById(exchange2).className);
             	var buf = document.getElementById(exchange1).src;
             	document.getElementById(exchange1).src = document.getElementById(exchange2).src;
             	document.getElementById(exchange2).src = buf;
@@ -328,8 +436,26 @@
             	// deselect
             	// document.getElementById(exchange1).className = 'ImageCentred';
             	// document.getElementById(exchange2).className = 'ImageCentred';
-            	earthquake_is_now = false;	
+            	earthquake_is_now = false;
+                document.getElementById("textinfo").innerHTML = 'Дело сделано!';
+
             }
+            // function that finds the exact substring and returns one of the following: rotor0, rotor90, rotor180, rotor270
+            function getRotor(all_classes) {
+            	var start = all_classes.search('rotor');
+            	var end = all_classes.slice(start).search(' ');
+            	if (-1 == end)
+            		end = all_classes.length;
+            	else
+            		end = end + start;
+            	var result = "";
+            	if (-1 != start)
+            		result = " " + all_classes.slice(start,end);
+            	
+            	return result;
+            }
+
+
             // exchange1 is blinking one - deprecated
             var exchange1 = '1';
             var exchange2 = '119';
@@ -346,7 +472,7 @@
             		// clicked on self or another exchange cell => stop blink, prepare to swap
             		if ( img.id == parseInt(exchange1) ) {
             			// exchange1 clicked
-            			// stop animation if it was animated. animate in other case
+            			// stop animation if it was animated. animate in other case(but only if the other wasn't animated)
             			if ("animated" == document.getElementById(exchange1).className.slice(-8)) {
             				document.getElementById(exchange1).className = document.getElementById(exchange1).className.slice(0,-8) + 'animated_not';
             				// light up the swap button if second is not animated
@@ -358,16 +484,24 @@
 	            			}
             			}
             			else {
-            				document.getElementById(exchange1).className = document.getElementById(exchange1).className.slice(0,-12) + 'animated';
-            				// set unready
-	           				document.getElementById("swap").className = "swapbutton";
-            			}
+	            			if ("animated" != document.getElementById(exchange2).className.slice(-8)) {
+	            				document.getElementById(exchange1).className = document.getElementById(exchange1).className.slice(0,-12) + 'animated';
+	            				// set unready
+		           				document.getElementById("swap").className = "swapbutton";
+	            			}
+	            			else {
+	            				document.getElementById(exchange1).className = document.getElementById(exchange1).className.slice(0,-12) + 'animated';
+	            				document.getElementById(exchange2).className = document.getElementById(exchange2).className.slice(0,-8) + 'animated_not';
+	            				// set unready
+		           				document.getElementById("swap").className = "swapbutton";
+	            			}
+	            		}
             		}
 
             		// same for second
             		if ( img.id == parseInt(exchange2) ) {
             			// exchange2 clicked
-            			// stop animation if it was animated. animate in other case
+            			// stop animation if it was animated. animate in other case(but only if the other wasn't animated if it was swap animation %) )
             			if ( "animated" == document.getElementById(exchange2).className.slice(-8) ) {
             				document.getElementById(exchange2).className = document.getElementById(exchange2).className.slice(0,-8) + 'animated_not';
             				// light up the swap button if second is not animated
@@ -379,9 +513,17 @@
 	            			}
             			}
             			else {
-            				document.getElementById(exchange2).className = document.getElementById(exchange2).className.slice(0,-12) + 'animated';
-            				// set unready
-	           				document.getElementById("swap").className = "swapbutton";
+	            			if ("animated" != document.getElementById(exchange1).className.slice(-8)) {
+	            				document.getElementById(exchange2).className = document.getElementById(exchange2).className.slice(0,-12) + 'animated';
+	            				// set unready
+		           				document.getElementById("swap").className = "swapbutton";
+		           			}
+		           			else {
+	            				document.getElementById(exchange2).className = document.getElementById(exchange2).className.slice(0,-12) + 'animated';
+	            				document.getElementById(exchange1).className = document.getElementById(exchange1).className.slice(0,-8) + 'animated_not';
+	            				// set unready
+		           				document.getElementById("swap").className = "swapbutton";
+		           			}
             			}
             		}
 
@@ -407,9 +549,6 @@
 
             		return 0;
             	}
-                // procedure to show info in right block
-                // show info about this cell
-                showinfo(results[img.id]);
                 // if it hasn't opened yet show the cell
                 if (img.src.slice(-18) == "small_pics/tin.png") {
                     var start = img.id;
@@ -440,26 +579,36 @@
                         document.getElementById(exchange1).className = document.getElementById(exchange1).className + " animated";
                         document.getElementById(exchange2).className = document.getElementById(exchange2).className + " animated_not";
 
-                       	// add swap button
-                        document.getElementById("textinfo").innerHTML = document.getElementById("textinfo").innerHTML + '<br><br>' + '<div id="swap" class="swapbutton" onClick="swap_cells()">Передернуть фишки</div>';
 
 
                     }
                 }
+                // procedure to show info in right block
+                // show info about this cell
+                // showinfo(results[img.id]); old and right
+                showinfo(img);
             };
             // first argument is a cell abbreviation (cnn, mdb, mlk and so on)
-            function showinfo(cell_path) {
+            function showinfo(img) {
+            	var cell_path = 'large_pics/' + results[img.id].slice(-7);
+            	
                 // return random number between 0 and 3
                 var some_data = JSON.parse('{{ json_cell_desc | safe}}');
                 document.getElementById("textinfo").innerHTML = "";
                 document.getElementById("picinfo").src = cell_path;
+                //alert(img.className);
+                document.getElementById("picinfo").className = "InfoImage InfoMargin" + getRotor(img.className);
+                // InfoImage InfoMargin
                 document.getElementById("textinfo").innerHTML = some_data[0][cell_path.slice(-7,-4)];
+               	// add swap button for erq
+               	if (earthquake_is_now) {
+	                document.getElementById("textinfo").innerHTML = document.getElementById("textinfo").innerHTML + '<br><br>' + '<div id="swap" class="swapbutton" onClick="swap_cells()">Потрясти доску</div>';
+            	}
             }
 
             function foobar() {
                 // return random number between 0 and 3
                 var some_data = JSON.parse('{{ json_cell_desc | safe}}');
-                alert(some_data[0]['fob']);
                 document.getElementById("textinfo").innerHTML = "";
                 document.getElementById("textinfo").innerHTML = some_data[0]['fob'];
                 alert("Success!!");

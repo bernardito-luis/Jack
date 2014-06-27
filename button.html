@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8" />
+</head>
+<body>
+<style type="text/css">
+    @font-face {
+        font-family: Flibustiere;
+        src: url("fonts/flibustiere.ttf")
+    }
+	.top_nav {
+		margin: 0 auto;
+		width: 1000px;
+
+		/*height: 40px;*/
+		/*display: inline-block;*/
+		float: left;
+	}
+	.ButtonNav {
+		font-family: Flibustiere;
+		background: rgb(224, 255, 255);
+		/*border-style: solid;*/
+		border: 3px solid lightgrey;
+		border-radius: 10px;
+
+		margin: 5px;
+		padding-right: 15px;
+		padding-left: 15px;
+
+		height: 35px;
+		/*vertical-align for one line only!! */
+		line-height: 40px;
+		text-align: center;
+		font-size: 14pt;
+
+		cursor: pointer;
+		display: inline-block;
+
+		/*box-sizing: content-box;*/
+	}
+	.WidthMainButton {
+		width: auto;
+	}
+	.WidthBeginButton {
+		width: auto;
+	}
+	.WidthAboutButton {
+		width: auto;
+	}
+	.ButtonNav:hover {
+		border: 3px solid green;
+		box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+	}
+	a {
+		text-decoration: none;
+	}
+	a:visited {
+		color: #000000;
+	}
+	a:active {
+		color: #000000;
+	}
+
+	.foot {
+		font-family: Flibustiere;
+		width: 1000px;
+		height: 35px;
+
+		/*vertical-align for one line only!! */
+		line-height: 40px;
+		text-align: center;
+		font-size: 10pt;
+
+	}
+</style>
+
+<div>Button</div>
+
+<br>
+<div class="top_nav">
+	<a class="ButtonNav WidthMainButton" href='http://www.ya.ru'>Главная</a>
+	<a class="ButtonNav WidthBeginButton">Начать партию</a>
+	<a class="ButtonNav WidthAboutButton">О проекте</a>
+</div>
+<br>
+<hr>
+<br>
+<div class="top_nav">
+	<div class="ButtonNav WidthMainButton">Главная</div>
+	<div class="ButtonNav WidthBeginButton">Начать партию</div>
+	<div class="ButtonNav WidthAboutButton">О проекте</div>
+</div>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<footer class="foot">
+	Max Belkin	
+</footer>
+</body>
+</html>
+

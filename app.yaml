@@ -5,17 +5,31 @@ api_version: 1
 threadsafe: yes
 
 handlers:
-- url: /hello/world
-  script: hello.application3
+- url: /other_tasks/clear_db
+  script: clear_db.application3
+  login: admin
 
 - url: /cron_tasks/map_generator
-  script: map_generator.application2
+  script: map_generator.application21
+  login: admin
+
+- url: /cron_tasks/old_map_generator
+  script: old_map_generator.application22
   login: admin
 
 - url: /stylesheets
   static_dir: stylesheets
 
+- url: /fonts
+  static_dir: fonts
+
 - url: /main
+  script: jackal_main.application
+
+- url: /smth
+  script: jackal_main.application
+
+- url: /about
   script: jackal_main.application
 
 - url: /test

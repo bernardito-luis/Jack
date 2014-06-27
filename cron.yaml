@@ -1,4 +1,8 @@
 cron:
 - description: generate a new balanced-map
   url: /cron_tasks/map_generator
-  schedule: every 14 minutes
+  schedule: every 28 minutes
+  
+- description: generate an old balanced-map
+  url: /cron_tasks/old_map_generator
+  schedule: every 28 minutes

@@ -1,4 +1,18 @@
 body {
-    font-family: Verdana, Helvetica, sans-serif;
-    background-color: lightgreen;
+
+/*
+    @font-face {
+        font-family: MyCustomFont;
+        src: url("fonts/flibustiere.eot")
+    }
+*/
+    
+
+    @font-face {
+        font-family: Flibustiere;
+        src: url("fonts/flibustiere.ttf")
+    }
+
+    /*font-family: Verdana, Helvetica, sans-serif;*/
+    background-color: white;
 }

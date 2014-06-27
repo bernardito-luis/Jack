@@ -1,0 +1,422 @@
+{% extends "base.html" %}
+
+{% block additonal_style %}
+        {% set cellside=50 %}
+
+        .game-field {
+            margin: 0 auto;
+            width: 1000px;
+        
+        }   
+        .disposition {
+            float: left;
+        }
+        .field {
+            width: 594;
+        }
+        .lightgreenback {
+            background: lightgreen;
+        }
+
+        .Cell{
+            height: {{ cellside + 4 }};
+            width: {{ cellside + 4 }};
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            float:left;
+        }
+        .ImageCentred {
+            height: {{ cellside }}px;
+            padding: 2px;
+        }
+        .ImageCentred:hover {
+            /*outline-offset: -2px;*/
+            border-radius: 5px;
+            box-shadow: 0px 0px 0px 2px darkgreen;
+        }        
+
+        .info {
+            width: 200px;
+            /*height: 584px;*/
+            margin-left: 25px;
+            background: lightcyan;
+            
+            padding: 5px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.5);
+        }
+        
+        .InfoImage {
+            height: 180;
+            padding: 4px;
+            
+            border: 3px solid darkgreen;
+            border-radius: 20px;
+            -o-border-radius: 20px;
+            -webkit-border-radius: 20px;
+        }
+        
+        .InfoMargin {
+            margin: 4px;
+        }
+
+        .InfoText {
+            font-size: 14px;
+            font-family: Flibustiere;
+        }
+
+        .swapbutton {
+			/*-webkit-touch-callout: none;*/
+			-webkit-user-select: none;
+			-o-user-select: none;
+			user-select: none;
+
+        	height: 40px;
+        	width: 180px;
+        	margin-left: 10px;
+        	margin-right: 10px;
+			text-align: center;
+			display: table-cell;
+			vertical-align: middle;
+
+			cursor: default;
+
+        	border: 3px solid rgba(0, 100, 0, 0.1);
+        	border-radius: 5px;
+        	background: rgba(0, 100, 0, 0.1);
+        }
+
+        .swapbutton_ready {
+			/*-webkit-touch-callout: none;*/
+			-webkit-user-select: none;
+			-o-user-select: none;
+			user-select: none;
+
+        	height: 40px;
+        	width: 180px;
+        	margin-left: 10px;
+        	margin-right: 10px;
+			text-align: center;
+			display: table-cell;
+			vertical-align: middle;
+
+			cursor: pointer;
+
+        	border: 3px solid rgba(0, 100, 0, 0.5);
+        	border-radius: 5px;
+        	background: rgba(0, 100, 0, 0.5);
+        }
+
+        .img.small {
+            height: 64px;
+            width: 64px;
+        }
+        {% set angle = ['0deg','90deg','180deg','270deg']|random %}
+        .rotated {
+            -webkit-transform   : rotate({{ angle }});
+            -o-transform      	: rotate({{ angle }});
+            transform           : rotate({{ angle }});
+        }
+        .rotor0 {
+            -webkit-transform: rotate(0deg);
+            -o-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+
+        .rotor90 {
+            -webkit-transform: rotate(90deg);
+            -o-transform: rotate(90deg);
+            transform: rotate(90deg);
+        }
+
+        .rotor180 {
+            -webkit-transform: rotate(180deg);
+            -o-transform: rotate(180deg);
+            transform: rotate(180deg);
+        }
+
+        .rotor270 {
+            -webkit-transform: rotate(270deg);
+            -o-transform: rotate(270deg);
+            transform: rotate(270deg);
+        }
+        
+        /*Animation stuff*/
+        .animated_not {
+            border-radius: 5px;
+            box-shadow: 0px 0px 0px 2px rgba(0, 100, 0, 1);
+        }
+
+        .animated {
+			-webkit-animation: borderblinking 3s infinite;
+			-o-animation: borderblinking 3s infinite;
+			animation: borderblinking 3s infinite;
+
+            border-radius: 5px;
+            box-shadow: 0px 0px 0px 2px rgba(255, 69, 0, 1);
+        }
+
+        @-webkit-keyframes borderblinking {
+        	0% { box-shadow: 0px 0px 0px 2px rgba(255, 69, 0, 1); }
+        	50% { box-shadow: 0px 0px 0px 2px rgba(255, 69, 0, 0.4); }
+        	100% { box-shadow: 0px 0px 0px 2px rgba(255, 69, 0, 1); }
+        }
+
+        @-o-keyframes borderblinking {
+        	0% { box-shadow: 0px 0px 0px 2px rgba(255, 69, 0, 1); }
+        	50% { box-shadow: 0px 0px 0px 2px rgba(255, 69, 0, 0.4); }
+        	100% { box-shadow: 0px 0px 0px 2px rgba(255, 69, 0, 1); }
+        }
+
+        @keyframes borderblinking {
+        	0% { box-shadow: 0px 0px 0px 2px rgba(255, 69, 0, 1); }
+        	50% { box-shadow: 0px 0px 0px 2px rgba(255, 69, 0, 0.4); }
+        	100% { box-shadow: 0px 0px 0px 2px rgba(255, 69, 0, 1); }
+        }
+
+
+{% endblock %}
+
+{% block content %}
+        <div class="game-field" onLoad="preloadCells()">
+            <div class="disposition field">
+            {% for i in range(11) %}
+
+                {% for j in range(11) %}
+                    <div class="Cell">
+                    {% if i*11+j == 0 %}
+                        <img class="ImageCentred" src="small_pics/wlu.png" id={{ i*11 + j }} onclick="getSrc(this)">
+                    {% elif i*11+j == 10 %}
+                        <img class="ImageCentred" src="small_pics/wru.png" id={{ i*11 + j }} onclick="getSrc(this)">
+                    {% elif i*11+j == 110 %}
+                        <img class="ImageCentred" src="small_pics/wld.png" id={{ i*11 + j }} onclick="getSrc(this)">
+                    {% elif i*11+j == 120 %}
+                        <img class="ImageCentred" src="small_pics/wrd.png" id={{ i*11 + j }} onclick="getSrc(this)">
+                    {% else %}
+                        <img class="ImageCentred" src="small_pics/tin.png" id={{ i*11 + j }} onclick="getSrc(this)">
+                    {% endif %}
+                    </div>
+                {% endfor %}
+                <br>
+                </p>
+            {% endfor %}
+
+            <br>
+            </div>
+            <div class="info disposition" >
+                <!-- <img class="InfoImage InfoMargin" id="picinfo" src="large_pics/logo.jpg"><br> old and right-->
+                <img class="InfoImage InfoMargin" id="picinfo" src="large_pics/logo.jpg"><br>
+                <div class="InfoMargin InfoText" id="textinfo" >
+                Вот остров, на котором вас ждут захватывающие приключения: золото, головокружительные высоты, ямы, пустыни, полеты на воздушных шарах и других средствах передвижения, бутылочки с интересным содержимым и, конечно же, драки, погони и прочие пиратские прелести.<br>
+				Время начинать! Белые ходят и ...
+                </div>
+            </div>
+        </div>
+
+{% endblock %}
+
+{% block additional_script %}
+            // results will contain all data about cells of the island
+            //   access through index from 0 to 120
+            var results = JSON.parse('{{ json_data | safe}}');
+
+            var earthquake_is_now = false;
+            // procedure to swap two cells after an earthquake
+            function swap_cells() {
+            	if ('swapbutton' == document.getElementById("swap").className)
+            		return;
+
+            	// swap
+            	var buf = document.getElementById(exchange1).src;
+            	document.getElementById(exchange1).src = document.getElementById(exchange2).src;
+            	document.getElementById(exchange2).src = buf;
+            	buf = document.getElementById(exchange1).className.slice(0,-12);
+            	document.getElementById(exchange1).className = document.getElementById(exchange2).className.slice(0,-12);
+            	document.getElementById(exchange2).className = buf;
+            	buf = results[exchange1];
+            	results[exchange1] = results[exchange2];
+            	results[exchange2] = buf;
+
+            	// deselect
+            	// document.getElementById(exchange1).className = 'ImageCentred';
+            	// document.getElementById(exchange2).className = 'ImageCentred';
+            	earthquake_is_now = false;
+                document.getElementById("textinfo").innerHTML = 'Дело сделано!';
+
+            }
+            // function that finds the exact substring and returns one of the following: rotor0, rotor90, rotor180, rotor270
+            function getRotor(all_classes) {
+            	var start = all_classes.search('rotor');
+            	var end = all_classes.slice(start).search(' ');
+            	if (-1 == end)
+            		end = all_classes.length;
+            	else
+            		end = end + start;
+            	var result = "";
+            	if (-1 != start)
+            		result = " " + all_classes.slice(start,end);
+            	
+            	return result;
+            }
+
+
+            // exchange1 is blinking one - deprecated
+            var exchange1 = '1';
+            var exchange2 = '119';
+            function getSrc(img){
+            	if (earthquake_is_now) {
+            		// corner clicked => avoid a piece of sea inside the island %-)
+					if ((img.src.slice(-7,-4) == "wlu") || 
+                        (img.src.slice(-7,-4) == "wru") ||
+                        (img.src.slice(-7,-4) == "wrd") ||
+                        (img.src.slice(-7,-4) == "wld")) {
+						return 0;
+					}
+
+            		// clicked on self or another exchange cell => stop blink, prepare to swap
+            		if ( img.id == parseInt(exchange1) ) {
+            			// exchange1 clicked
+            			// stop animation if it was animated. animate in other case(but only if the other wasn't animated)
+            			if ("animated" == document.getElementById(exchange1).className.slice(-8)) {
+            				document.getElementById(exchange1).className = document.getElementById(exchange1).className.slice(0,-8) + 'animated_not';
+            				// light up the swap button if second is not animated
+	            			if ("animated_not" == document.getElementById(exchange2).className.slice(-12)) {
+	            				document.getElementById("swap").className = "swapbutton_ready";
+	            			}
+	            			else {
+	            				document.getElementById("swap").className = "swapbutton";
+	            			}
+            			}
+            			else {
+	            			if ("animated" != document.getElementById(exchange2).className.slice(-8)) {
+	            				document.getElementById(exchange1).className = document.getElementById(exchange1).className.slice(0,-12) + 'animated';
+	            				// set unready
+		           				document.getElementById("swap").className = "swapbutton";
+	            			}
+	            			else {
+	            				document.getElementById(exchange1).className = document.getElementById(exchange1).className.slice(0,-12) + 'animated';
+	            				document.getElementById(exchange2).className = document.getElementById(exchange2).className.slice(0,-8) + 'animated_not';
+	            				// set unready
+		           				document.getElementById("swap").className = "swapbutton";
+	            			}
+	            		}
+            		}
+
+            		// same for second
+            		if ( img.id == parseInt(exchange2) ) {
+            			// exchange2 clicked
+            			// stop animation if it was animated. animate in other case(but only if the other wasn't animated if it was swap animation %) )
+            			if ( "animated" == document.getElementById(exchange2).className.slice(-8) ) {
+            				document.getElementById(exchange2).className = document.getElementById(exchange2).className.slice(0,-8) + 'animated_not';
+            				// light up the swap button if second is not animated
+	            			if ( "animated_not" == document.getElementById(exchange1).className.slice(-12) ) {
+	            				document.getElementById("swap").className = "swapbutton_ready";
+	            			}
+	            			else {
+	            				document.getElementById("swap").className = "swapbutton";
+	            			}
+            			}
+            			else {
+	            			if ("animated" != document.getElementById(exchange1).className.slice(-8)) {
+	            				document.getElementById(exchange2).className = document.getElementById(exchange2).className.slice(0,-12) + 'animated';
+	            				// set unready
+		           				document.getElementById("swap").className = "swapbutton";
+		           			}
+		           			else {
+	            				document.getElementById(exchange2).className = document.getElementById(exchange2).className.slice(0,-12) + 'animated';
+	            				document.getElementById(exchange1).className = document.getElementById(exchange1).className.slice(0,-8) + 'animated_not';
+	            				// set unready
+		           				document.getElementById("swap").className = "swapbutton";
+		           			}
+            			}
+            		}
+
+            		// other cell was clicked and some was blinking(animated) move blinking frame
+            		if ( (img.id != parseInt(exchange1)) && (img.id != parseInt(exchange2)) 
+            			&& ( "swapbutton" == document.getElementById("swap").className) ) {
+
+            			if ( 'animated' == document.getElementById(exchange1).className.slice(-8) ) {
+            				// first was animated
+            				document.getElementById(exchange1).className = document.getElementById(exchange1).className.slice(0,-9);
+            				exchange1 = String(img.id);
+            				document.getElementById(exchange1).className = document.getElementById(exchange1).className + ' animated';
+            			}
+            			else {
+            				// second was animated
+            				document.getElementById(exchange2).className = document.getElementById(exchange2).className.slice(0,-9);
+            				exchange2 = String(img.id);
+            				document.getElementById(exchange2).className = document.getElementById(exchange2).className + ' animated';
+            			}
+
+					}
+
+
+            		return 0;
+            	}
+                // if it hasn't opened yet show the cell
+                if (img.src.slice(-18) == "small_pics/tin.png") {
+                    var start = img.id;
+                    //alert(results[1]);
+                    img.src = results[start];
+                    // need to rotate only if it is one of the following:
+                    //   cnn, mdb, mds, msb, mss, mtd
+                    if ((img.src.slice(-7,-4) == "cnn") || 
+                        (img.src.slice(-7,-4) == "mdb") ||
+                        (img.src.slice(-7,-4) == "mds") ||
+                        (img.src.slice(-7,-4) == "msb") ||
+                        (img.src.slice(-7,-4) == "mss") ||
+                        (img.src.slice(-7,-4) == "mtd")) {
+                    
+                        // return random number between 0 and 3
+                        angle = Math.floor((Math.random()*4));
+                        // get the random angle 0, 90, 180 or 270
+                        angle = angle * 90;
+                        //img.height = 64;                
+                        //img.width = 64;                
+                        img.className = "ImageCentred " + "rotor"+angle;
+                        //alert(img.className);
+                    }
+                    
+                    // special case for earthquake
+                    if ('small_pics/erq.png' == results[start]) {
+                        earthquake_is_now = true;
+                        document.getElementById(exchange1).className = document.getElementById(exchange1).className + " animated";
+                        document.getElementById(exchange2).className = document.getElementById(exchange2).className + " animated_not";
+
+
+
+                    }
+                }
+                // procedure to show info in right block
+                // show info about this cell
+                // showinfo(results[img.id]); old and right
+                showinfo(img);
+            };
+            // first argument is a cell abbreviation (cnn, mdb, mlk and so on)
+            function showinfo(img) {
+            	var cell_path = 'large_pics/' + results[img.id].slice(-7);
+            	
+                // return random number between 0 and 3
+                var some_data = JSON.parse('{{ json_cell_desc | safe}}');
+                document.getElementById("textinfo").innerHTML = "";
+                document.getElementById("picinfo").src = cell_path;
+                //alert(img.className);
+                document.getElementById("picinfo").className = "InfoImage InfoMargin" + getRotor(img.className);
+                // InfoImage InfoMargin
+                document.getElementById("textinfo").innerHTML = some_data[0][cell_path.slice(-7,-4)];
+               	// add swap button for erq
+               	if (earthquake_is_now) {
+	                document.getElementById("textinfo").innerHTML = document.getElementById("textinfo").innerHTML + '<br><br>' + '<div id="swap" class="swapbutton" onClick="swap_cells()">Потрясти доску</div>';
+            	}
+            }
+
+            function foobar() {
+                // return random number between 0 and 3
+                var some_data = JSON.parse('{{ json_cell_desc | safe}}');
+                document.getElementById("textinfo").innerHTML = "";
+                document.getElementById("textinfo").innerHTML = some_data[0]['fob'];
+                alert("Success!!");
+            }
+
+{% endblock %}

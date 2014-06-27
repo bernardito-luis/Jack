@@ -13,7 +13,7 @@ import jinja2
 import webapp2
 
 from map_generator import TreasureMap
-from assemble_map import assemble
+from assemble_map import assemble, map_legend, old_map_legend
 from info import textinfo
 
 
@@ -62,7 +62,18 @@ def guestbook_key(guestbook_name=DEFAULT_GUESTBOOK_NAME):
     return ndb.Key('Guestbook', guestbook_name)
 
 
-BUBLE = '0'
+class MainPageDesc(webapp2.RequestHandler):
+    def get(self):
+        template_values = dict()
+        template = JINJA_ENVIRONMENT.get_template('main.html')
+        self.response.write(template.render(template_values))
+    
+class AboutPage(webapp2.RequestHandler):
+    def get(self):
+        template_values = dict()
+        template = JINJA_ENVIRONMENT.get_template('about.html')
+        self.response.write(template.render(template_values))
+    
 class MainPage(webapp2.RequestHandler):
     # pretends to be a debug method (clone of the global function)
     def c_get_map_str_abb(self):
@@ -70,7 +81,9 @@ class MainPage(webapp2.RequestHandler):
         map_got = map_query.fetch(1)
         # get current map number and quantuty
         cur_map_num = int(map_got[0].info) / 0x10000
-        self.response.write("You are using map #" + str(cur_map_num) + "<br>")
+        total_maps = (int(map_got[0].info) % 0x10000)
+        #self.response.write("You are using map #" + str(cur_map_num) + "<br>")
+        # self.response.write("Total map count: " + str(total_maps) + "<br>")
         cur_map_quant = int(map_got[0].info) % 0x10000
         if cur_map_num == cur_map_quant:
             # move to the begining
@@ -87,7 +100,35 @@ class MainPage(webapp2.RequestHandler):
         map_got = map_query.fetch(1)
         map_str = map_got[0].info
         
-        print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+        # print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+
+        return map_str
+
+    def c_get_old_map_str_abb(self):
+        map_query = OldTreasureMap.query(OldTreasureMap.map_id == 0)
+        map_got = map_query.fetch(1)
+        # # get current map number and quantuty
+        cur_map_num = int(map_got[0].info) / 0x10000
+        # total_maps = (int(map_got[0].info) % 0x10000)
+        # self.response.write("You are using map #" + str(cur_map_num) + "<br>")
+        # self.response.write("Total map count: " + str(total_maps) + "<br>")
+        cur_map_quant = int(map_got[0].info) % 0x10000
+        if cur_map_num == cur_map_quant:
+            # move to the begining
+            new_pointer = 0x10000+ cur_map_quant
+        else:
+            # increase pointer
+            new_pointer = int(map_got[0].info) + 0x10000
+        # move pointer
+        map_got[0].info = str(new_pointer)
+        map_got[0].put()
+
+        # get that map
+        map_query = OldTreasureMap.query(OldTreasureMap.map_id == cur_map_num)
+        map_got = map_query.fetch(1)
+        map_str = map_got[0].info
+        
+        # print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
 
         return map_str
 
@@ -96,28 +137,16 @@ class MainPage(webapp2.RequestHandler):
     
 #        self.response.write(json.dumps(['pics/1.jpg','pics/2.jpg'])
         
-        guestbook_name = self.request.get('guestbook_name',
-                                          DEFAULT_GUESTBOOK_NAME)
-        greetings_query = Greeting.query(
-            ancestor=guestbook_key(guestbook_name)).order(-Greeting.date)
-        greetings = greetings_query.fetch(10)
-
-        if users.get_current_user():
-            url = users.create_logout_url(self.request.uri)
-            url_linktext = 'Logout'
-        else:
-            url = users.create_login_url(self.request.uri)
-            url_linktext = 'Login'
 
         # for dbg it is an outstanding string
-        json_map = assemble(self.c_get_map_str_abb())
-        #self.response.write("Earthquake on cell -" + str(json_map.index('small_pics/erq.png')) + "-<br>")
+        json_map = assemble(self.c_get_map_str_abb(), map_legend)
+        # self.response.write("Earthquake on cell -" + str(json_map.index('small_pics/erq.png')) + "-<br>")
         
         template_values = {
-            'greetings': greetings,
-            'guestbook_name': urllib.quote_plus(guestbook_name),
-            'url': url,
-            'url_linktext': url_linktext,
+            #'greetings': greetings,
+            #'guestbook_name': urllib.quote_plus(guestbook_name),
+            #'url': url,
+            #'url_linktext': url_linktext,
         # text description for cells
             'json_cell_desc':  json.dumps([textinfo]),
         #creating template variables
@@ -126,9 +155,9 @@ class MainPage(webapp2.RequestHandler):
         }
         #self.response.write(template_values['json_data'])
 
-        self.response.write("Welcome to Jackal balanced<br>")
+        # self.response.write("Welcome to Jackal balanced<br>")
 
-        template = JINJA_ENVIRONMENT.get_template('index.html')
+        template = JINJA_ENVIRONMENT.get_template('smth.html')
         self.response.write(template.render(template_values))
 
         
@@ -170,8 +199,11 @@ class Guestbook(webapp2.RequestHandler):
 application = webapp2.WSGIApplication([
         ('/', ToMainPage),
         ('/test', TestPage),
-        ('/main', MainPage),
+        ('/smth', MainPage),
+        ('/main', MainPageDesc),
+        ('/about', AboutPage),
         ('/sign', Guestbook),
+#        ('/clear', Guestbook),
 #        ('/cron_tasks/map_generator', MapGenerator),
 ], debug=True)
 
