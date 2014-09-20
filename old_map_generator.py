@@ -186,7 +186,7 @@ class OldMapGenerator(webapp2.RequestHandler):
             new_map = 'place new map-string here'
             possible_maps = []
             # 25 000 default
-            for i in range(8):
+            for i in range(25000):
                 # print '01010230304'
                 calculate_distances(pseudo, possible_maps, world_old_treasures)            
 
